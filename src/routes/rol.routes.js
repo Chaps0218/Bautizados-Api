@@ -6,6 +6,8 @@ import {
     updateRol,
     deleteRol
 } from "../controllers/rol.controller.js";
+import dotenv from 'dotenv';
+dotenv.config();
 
 import { validateSchema } from "../middlewares/validator.middleware.js";
 import { rolSchema } from "../schemas/rol.schema.js";
