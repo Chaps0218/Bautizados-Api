@@ -4,6 +4,7 @@ import express from "express";
 import morgan from "morgan";
 import authRoutes from "./routes/auth.routes.js";
 import bautizadoRoutes from "./routes/bautizado.routes.js";
+import ministroRoutes from "./routes/ministro.routes.js";
 import rolRoutes from "./routes/rol.routes.js";
 
 const app = express();
@@ -20,6 +21,7 @@ app.use(cookieParser());
 app.use("/bauApi/auth", authRoutes);
 app.use("/bauApi/roles", rolRoutes);
 app.use("/bauApi/bautizados", bautizadoRoutes);
+app.use("/bauApi/ministros", ministroRoutes);
 app.use("/helloWorld", (req, res) => {
   res.send("Hello World");
 });
