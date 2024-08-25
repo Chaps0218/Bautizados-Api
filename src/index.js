@@ -1,10 +1,11 @@
 import app from "./app.js";
-import { db } from "./db.js";
+import db from "./db.js";
+
 
 db.connect((err) => {
     if (err) {
         console.error(
-            "Error en la conexión a la base de datos, error numero:",
+            "Error en la conexión a la base de datos, err:",
             err
         );
         return;

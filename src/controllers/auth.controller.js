@@ -1,10 +1,10 @@
-import { registerSchema, loginSchema } from "../schemas/auth.schema";
+import { registerSchema, loginSchema } from "../schemas/auth.schema.js";
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { TOKEN_SECRET } from "../config.js";
 import db from "../db.js";
 
-const register = (req, res) => {
+export const register = (req, res) => {
     const { username, nombre, establecimiento, password } = req.body;
     const { error } = registerSchema.validate(req.body);
     if (error) {
@@ -26,7 +26,7 @@ const register = (req, res) => {
     });
 };
 
-const login = (req, res) => {
+export const login = (req, res) => {
     const { username, password } = req.body;
     const { error } = loginSchema.validate(req.body);
 
@@ -51,15 +51,23 @@ const login = (req, res) => {
         if (!isPasswordValid) {
             return res.status(401).json({ error: "Contraseña incorrecta" });
         }
+        const q = "SELECT rol_permisos FROM rol WHERE rol_id = ?";
+        db.query(q, [user.rol_id], (err, result) => {
+            if (err) {
+                console.error("Error al buscar los permisos del rol:", err);
+                return res.status(500).json({ error: "Error al buscar los permisos del rol" });
+            }
+            const rol = result[0];
+            const permisos = rol.rol_permisos;
+            const token = jwt.sign({ id: user.usu_id, permisos }, TOKEN_SECRET, { expiresIn: 28800 });
+            res.cookie("token", token, { httpOnly: true, secure: true, sameSite: "none" });
 
-        const token = jwt.sign({ id: user.usu_id }, TOKEN_SECRET, { expiresIn: 28800 });
-        res.cookie("token", token, { httpOnly: true, secure: true, sameSite: "none" });
-
-        res.status(200).json({ message: "Usuario logueado con éxito" });
+            res.status(200).json({ message: "Usuario logueado con éxito" });
+        });
     });
 };
 
-const logout = (req, res) => {
+export const logout = (req, res) => {
     res.clearCookie("token", {
         sameSite: "none",
         secure: true,
@@ -100,11 +108,3 @@ const logout = (req, res) => {
 //         });
 //     });
 // }
-
-
-module.exports = {
-    register,
-    login,
-    logout,
-    verifyToken
-};

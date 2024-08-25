@@ -3,8 +3,6 @@ import {
     login,
     register,
     logout,
-    profile,
-    verifyToken,
 } from "../controllers/auth.controller.js";
 
 import { validateSchema } from "../middlewares/validator.middleware.js"

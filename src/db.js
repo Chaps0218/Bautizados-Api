@@ -1,8 +1,12 @@
-import mysql from "mysql";
+import mysql from "mysql2";
+import dotenv from 'dotenv';
+dotenv.config();
 
-export const db = mysql.createConnection({
+const db = mysql.createConnection({
     host: process.env.DBHOST,
     user: process.env.DBUSER,
     password: process.env.DBPASS,
     database: process.env.DBNAME
-})
+});
+
+export default db;
