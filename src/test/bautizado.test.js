@@ -33,8 +33,9 @@ describe("Pruebas de integración para el controlador de ministros", () => {
     const res = await request(app)
       .post("/bauApi/auth/login")
       .send({ usu_username: "codaki", usu_password: "12345" });
-
-    token = res.body.token;
+    const headers = res.headers; // Get the headers from the response
+    const cookie = headers["set-cookie"][0]; // Get the first cookie string
+    token = cookie.split(";")[0].split("=")[1]; // Split by ';' and then by '=' to get the token value
   });
 
   test("Debería crear un nuevo ministro", async () => {
@@ -50,6 +51,7 @@ describe("Pruebas de integración para el controlador de ministros", () => {
   });
 
   test("Debería obtener todos los ministros", async () => {
+    console.log(token);
     const response = await request(app)
       .get("/bauApi/ministros/getMinistros")
       .set("Cookie", `token=${token}`);
