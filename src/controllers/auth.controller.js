@@ -5,11 +5,11 @@ import { TOKEN_SECRET } from "../config.js";
 import db from "../db.js";
 
 export const register = (req, res) => {
-    const { username, nombre, establecimiento, password } = req.body;
-    const hashedPassword = bcrypt.hashSync(password, 10);
+    const { usu_username, usu_nombre, usu_establecimiento, usu_password } = req.body;
+    const hashedPassword = bcrypt.hashSync(usu_password, 10);
 
     const query = "INSERT INTO usuario (usu_usuario, usu_nombre, usu_establecimiento, usu_password, rol_id) VALUES (?, ?, ?, ?, ?)";
-    const values = [username, nombre, establecimiento, hashedPassword, 2];
+    const values = [usu_username, usu_nombre, usu_establecimiento, hashedPassword, 2];
 
     db.query(query, values, (err, result) => {
         if (err) {
@@ -22,10 +22,10 @@ export const register = (req, res) => {
 };
 
 export const login = (req, res) => {
-    const { username, password } = req.body;
+    const { usu_username, usu_password } = req.body;
 
     const query = "SELECT * FROM usuario WHERE usu_usuario = ?";
-    db.query(query, [username], (err, result) => {
+    db.query(query, [usu_username], (err, result) => {
         if (err) {
             console.error("Error al buscar el usuario:", err);
             return res.status(500).json({ error: "Error al buscar el usuario" });
@@ -36,7 +36,7 @@ export const login = (req, res) => {
         }
 
         const user = result[0];
-        const isPasswordValid = bcrypt.compareSync(password, user.usu_password);
+        const isPasswordValid = bcrypt.compareSync(usu_password, user.usu_password);
 
         if (!isPasswordValid) {
             return res.status(401).json({ error: "Contraseña incorrecta" });

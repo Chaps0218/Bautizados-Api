@@ -3,10 +3,10 @@ import db from "../db.js";
 
 export const createRol = (req, res) => {
     try {
-        const { nombre, permisos } = rolSchema.parse(req.body);
+        const { rol_nombre, rol_permisos } = rolSchema.parse(req.body);
 
         const query = "INSERT INTO rol (rol_nombre, rol_permisos) VALUES (?, ?)";
-        const values = [nombre, permisos];
+        const values = [rol_nombre, rol_permisos];
 
         db.query(query, values, (err, result) => {
             if (err) {
@@ -54,10 +54,10 @@ export const getRol = (req, res) => {
 export const updateRol = (req, res) => {
     try {
         const { id } = req.params;
-        const { nombre, permisos } = rolSchema.parse(req.body);
+        const { rol_nombre, rol_permisos } = rolSchema.parse(req.body);
 
         const query = "UPDATE rol SET rol_nombre = ?, rol_permisos = ? WHERE rol_id = ?";
-        const values = [nombre, permisos, id];
+        const values = [rol_nombre, rol_permisos, id];
 
         db.query(query, values, (err, result) => {
             if (err) {
