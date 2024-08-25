@@ -1,16 +1,12 @@
-import app from "./app.js";
+import app from "./App.js";
 import db from "./db.js";
 
-
 db.connect((err) => {
-    if (err) {
-        console.error(
-            "Error en la conexión a la base de datos, err:",
-            err
-        );
-        return;
-    }
-    console.log("Conexión exitosa a la base de datos!");
+  if (err) {
+    console.error("Error en la conexión a la base de datos, err:", err);
+    return;
+  }
+  console.log("Conexión exitosa a la base de datos!");
 });
 
 app.listen(8800);
