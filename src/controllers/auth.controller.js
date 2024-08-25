@@ -9,7 +9,7 @@ export const register = (req, res) => {
     const hashedPassword = bcrypt.hashSync(password, 10);
 
     const query = "INSERT INTO usuario (usu_usuario, usu_nombre, usu_establecimiento, usu_password, rol_id) VALUES (?, ?, ?, ?, ?)";
-    const values = [username, nombre, establecimiento, hashedPassword, 1];
+    const values = [username, nombre, establecimiento, hashedPassword, 2];
 
     db.query(query, values, (err, result) => {
         if (err) {
