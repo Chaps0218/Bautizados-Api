@@ -6,11 +6,6 @@ import db from "../db.js";
 
 export const register = (req, res) => {
     const { username, nombre, establecimiento, password } = req.body;
-    const { error } = registerSchema.validate(req.body);
-    if (error) {
-        return res.status(400).json({ error: error.message });
-    }
-
     const hashedPassword = bcrypt.hashSync(password, 10);
 
     const query = "INSERT INTO usuario (usu_usuario, usu_nombre, usu_establecimiento, usu_password, rol_id) VALUES (?, ?, ?, ?, ?)";
@@ -28,11 +23,6 @@ export const register = (req, res) => {
 
 export const login = (req, res) => {
     const { username, password } = req.body;
-    const { error } = loginSchema.validate(req.body);
-
-    if (error) {
-        return res.status(400).json({ error: error.message });
-    }
 
     const query = "SELECT * FROM usuario WHERE usu_usuario = ?";
     db.query(query, [username], (err, result) => {
