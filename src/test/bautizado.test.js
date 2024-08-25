@@ -2,117 +2,165 @@ import request from "supertest";
 import app from "../App.js";
 import db from "../db.js";
 
-beforeAll((done) => {
-  // Conectar a la base de datos antes de las pruebas
-  db.connect((err) => {
-    if (err) {
-      console.error("Error en la conexión a la base de datos:", err);
-      return done(err);
-    }
-    console.log("Conexión exitosa a la base de datos!");
-    done();
-  });
-});
-
-afterAll((done) => {
-  // Cerrar la conexión a la base de datos después de las pruebas
-  db.end((err) => {
-    if (err) {
-      console.error("Error al cerrar la conexión a la base de datos:", err);
-      return done(err);
-    }
-    console.log("Conexión a la base de datos cerrada!");
-    done();
-  });
-});
-
-describe("Pruebas de integración para el controlador de ministros", () => {
-  let token;
+describe("Pruebas de integración para operaciones de bautizados", () => {
+  let authToken;
+  let createdBautizadoId;
 
   beforeAll(async () => {
-    const res = await request(app)
+    // Configurar la conexión a la base de datos de prueba
+    await new Promise((resolve, reject) => {
+      db.connect((err) => {
+        if (err) reject(err);
+        else resolve();
+      });
+    });
+
+    // Iniciar sesión para obtener el token de autenticación
+    const loginResponse = await request(app)
       .post("/bauApi/auth/login")
       .send({ usu_username: "codaki", usu_password: "12345" });
-    const headers = res.headers; // Get the headers from the response
-    const cookie = headers["set-cookie"][0]; // Get the first cookie string
-    token = cookie.split(";")[0].split("=")[1]; // Split by ';' and then by '=' to get the token value
+
+    authToken = loginResponse.headers["set-cookie"][0]
+      .split(";")[0]
+      .split("=")[1];
   });
 
-  test("Debería crear un nuevo ministro", async () => {
-    const response = await request(app)
-      .post("/bauApi/ministros/createMinistro")
-      .set("Cookie", `token=${token}`)
-      .send({
-        min_nombre: "Ministro Prueba",
+  afterAll(async () => {
+    // Cerrar la conexión a la base de datos
+    await new Promise((resolve, reject) => {
+      db.end((err) => {
+        if (err) reject(err);
+        else resolve();
       });
-    expect(response.statusCode).toBe(201);
-    expect(response.body).toHaveProperty("id");
-    expect(response.body).toHaveProperty("min_nombre", "Ministro Prueba");
+    });
   });
 
-  test("Debería obtener todos los ministros", async () => {
-    console.log(token);
+  test("Debería crear un nuevo bautizado", async () => {
     const response = await request(app)
-      .get("/bauApi/ministros/getMinistros")
-      .set("Cookie", `token=${token}`);
+      .post("/bauApi/bautizados/createBautizado")
+      .set("Cookie", `token=${authToken}`)
+      .send({
+        bau_nombre: "Juan Pérez",
+        bau_padre: "Pedro Pérez",
+        bau_madre: "María García",
+        bau_padrino1: "Carlos López",
+        bau_padrino2: "Ana Martínez",
+        bau_fecha: "2023-08-25",
+        bau_tomo: 1,
+        bau_pagina: 1,
+        bau_numero: 1,
+        min_id: 1,
+        usu_id: 1,
+      });
+
+    expect(response.statusCode).toBe(201);
+    expect(response.body).toHaveProperty(
+      "message",
+      "Bautizado registrado con éxito"
+    );
+    expect(response.body).toHaveProperty("id");
+    expect(response.body).toHaveProperty("bau_nombre", "Juan Pérez");
+
+    createdBautizadoId = response.body.id;
+  });
+
+  test("Debería obtener todos los bautizados", async () => {
+    const response = await request(app)
+      .get("/bauApi/bautizados/getBautizados")
+      .set("Cookie", `token=${authToken}`);
+
     expect(response.statusCode).toBe(200);
     expect(Array.isArray(response.body)).toBe(true);
+    expect(response.body.length).toBeGreaterThan(0);
   });
 
-  test("Debería obtener un ministro por ID", async () => {
-    // Primero crear un ministro para obtener su ID
-    const createRes = await request(app)
-      .post("/bauApi/ministros/createMinistro")
-      .set("Cookie", `token=${token}`)
-      .send({
-        min_nombre: "Ministro Prueba ID",
-      });
-
+  test("Debería obtener un bautizado específico", async () => {
     const response = await request(app)
-      .get(`/bauApi/ministros/getMinistro/${createRes.body.id}`)
-      .set("Cookie", `token=${token}`);
+      .get(`/bauApi/bautizados/getBautizadoById/${createdBautizadoId}`)
+      .set("Cookie", `token=${authToken}`);
+
     expect(response.statusCode).toBe(200);
-    expect(response.body).toHaveProperty("min_nombre", "Ministro Prueba ID");
+    expect(response.body).toHaveProperty("bau_id", createdBautizadoId);
+    expect(response.body).toHaveProperty("bau_nombre", "Juan Pérez");
   });
 
-  test("Debería actualizar un ministro", async () => {
-    // Primero crear un ministro para actualizar
-    const createRes = await request(app)
-      .post("/bauApi/ministros/createMinistro")
-      .set("Cookie", `token=${token}`)
+  test("Debería actualizar un bautizado", async () => {
+    const response = await request(app)
+      .put(`/bauApi/bautizados/updateBautizado/${createdBautizadoId}`)
+      .set("Cookie", `token=${authToken}`)
       .send({
-        min_nombre: "Ministro a Actualizar",
+        bau_nombre: "Juan Pérez Actualizado",
+        bau_padre: "Pedro Pérez",
+        bau_madre: "María García",
+        bau_padrino1: "Carlos López",
+        bau_padrino2: "Ana Martínez",
+        bau_fecha: "2023-08-25",
+        bau_tomo: 1,
+        bau_pagina: 1,
+        bau_numero: 1,
+        min_id: 1,
+        usu_id: 1,
       });
 
-    const response = await request(app)
-      .put(`/bauApi/ministros/updateMinistro/${createRes.body.id}`)
-      .set("Cookie", `token=${token}`)
-      .send({
-        min_nombre: "Ministro Actualizado",
-      });
     expect(response.statusCode).toBe(200);
     expect(response.body).toHaveProperty(
       "message",
-      "Ministro actualizado con éxito"
+      "Bautizado actualizado con éxito"
     );
   });
 
-  test("Debería eliminar un ministro", async () => {
-    // Primero crear un ministro para eliminar
-    const createRes = await request(app)
-      .post("/bauApi/ministros/createMinistro")
-      .set("Cookie", `token=${token}`)
-      .send({
-        min_nombre: "Ministro a Eliminar",
-      });
-
+  test("Debería generar un certificado de bautizo", async () => {
     const response = await request(app)
-      .delete(`/bauApi/ministros/deleteMinistro/${createRes.body.id}`)
-      .set("Cookie", `token=${token}`);
+      .get(`/bauApi/bautizados/generateCertificate/${createdBautizadoId}`)
+      .set("Cookie", `token=${authToken}`);
+
+    expect(response.statusCode).toBe(200);
+    expect(response.headers["content-type"]).toBe("application/pdf");
+    expect(response.headers["content-disposition"]).toContain(
+      'attachment; filename="certificado_'
+    );
+  });
+
+  test("Debería eliminar un bautizado", async () => {
+    const response = await request(app)
+      .delete(`/bauApi/bautizados/deleteBautizado/${createdBautizadoId}`)
+      .set("Cookie", `token=${authToken}`);
+
     expect(response.statusCode).toBe(200);
     expect(response.body).toHaveProperty(
       "message",
-      "Ministro eliminado con éxito"
+      "Bautizado eliminado con éxito"
     );
+  });
+
+  test("No debería crear un bautizado con datos inválidos", async () => {
+    const response = await request(app)
+      .post("/bauApi/bautizados/createBautizado")
+      .set("Cookie", `token=${authToken}`)
+      .send({
+        bau_nombre: "", // Nombre vacío, debería ser inválido
+        bau_padre: "Pedro Pérez",
+        bau_madre: "María García",
+        bau_padrino1: "Carlos López",
+        bau_padrino2: "Ana Martínez",
+        bau_fecha: "2023-08-25",
+        bau_tomo: 1,
+        bau_pagina: 1,
+        bau_numero: 1,
+        min_id: 1,
+        usu_id: 1,
+      });
+
+    expect(response.statusCode).toBe(400);
+  });
+
+  test("Debería devolver 404 al intentar obtener un bautizado no existente", async () => {
+    const nonExistentId = 9999;
+    const response = await request(app)
+      .get(`/bauApi/bautizados/getBautizadoById/${nonExistentId}`)
+      .set("Cookie", `token=${authToken}`);
+
+    expect(response.statusCode).toBe(404);
+    expect(response.body).toHaveProperty("error", "Bautizado no encontrado");
   });
 });
