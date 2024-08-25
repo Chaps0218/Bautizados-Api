@@ -5,6 +5,7 @@ import {
   getBautizadoById,
   getBautizados,
   updateBautizado,
+  generateCertificate
 } from "../controllers/bautizado.controller.js";
 import { validateSchema } from "../middlewares/validator.middleware.js";
 import { bautizadoSchema } from "../schemas/bautizado.schema.js";
@@ -21,5 +22,6 @@ router.get("/getBautizados", authRequired, validatePermission(process.env.GC), g
 router.get("/getBautizadoById/:id", authRequired, validatePermission(process.env.GC), getBautizadoById);
 router.put("/updateBautizado/:id", authRequired, validatePermission(process.env.MB), validateSchema(bautizadoSchema), updateBautizado);
 router.delete("/deleteBautizado/:id", authRequired, validatePermission(process.env.CU), deleteBautizado);
+router.get("/generateCertificate/:id", authRequired, validatePermission(process.env.GC), generateCertificate);
 
 export default router;

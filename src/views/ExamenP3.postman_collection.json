@@ -1,0 +1,535 @@
+{
+	"info": {
+		"_postman_id": "9f88bc5d-88e7-40d3-b87c-68a9cfded84a",
+		"name": "ExamenP3",
+		"description": "Examen Tercer Parcial - Grupo 8\n\nIntegrantes:\n\n- Mathias Guevara\n    \n- Christopher Iza\n    \n- Shared Tinoco\n    \n\nEsta API ayuda a gestionar la información de las personas que han sido bautizadas dentro de la parroquia de preferencia.\n\nEsta API cuenta con mecanismos que evitan que se accedan a las rutas a menos que se ingrese sesión. Por motivos didácticos y para la calificación de este trabajo, se ha incluido de manera accessible el Endpoint para registrar. Sin embargo, la lógica real sería que solo un usuario con los permisos adecuados podría ingresar nuevos usuarios.\n\nEsperamos le guste :D.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27941478",
+		"_collection_link": "https://warped-astronaut-348587.postman.co/workspace/a8627376-d30c-46f2-a4b3-525e1fc4465d/collection/27941478-9f88bc5d-88e7-40d3-b87c-68a9cfded84a?action=share&source=collection_link&creator=27941478"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"usu_username\": \"usuarioPrueba\",\r\n    \"usu_password\": \"123456\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8800/bauApi/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8800",
+							"path": [
+								"bauApi",
+								"auth",
+								"login"
+							]
+						},
+						"description": "Esta función inicia sesión dentro del sistema. Se almacena una cookie dentro del postman y la mayoría de sistemas en la que se pruebe esta colección, incluyendo páginas web. En caso de que no sea este el caso, es necesario almacenar dicha cookie.\n\nDentro del body, es necesario el usuario y la contraseña como texto plano, el sistema almacena las contraseñas hasheadas."
+					},
+					"response": []
+				},
+				{
+					"name": "Registrar",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"usuarioPrueba\",\r\n    \"nombre\": \"nombre prueba\",\r\n    \"establecimiento\": \"establecimiento prueba\",\r\n    \"password\": \"123456\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8800/bauApi/auth/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8800",
+							"path": [
+								"bauApi",
+								"auth",
+								"register"
+							]
+						},
+						"description": "Endpoint que se agregó para fines didácticos, esta función normalmente estaría disponible únicamente para superUsuarios, al no ser un sistema abierto."
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8800/bauApi/auth/logout",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8800",
+							"path": [
+								"bauApi",
+								"auth",
+								"logout"
+							]
+						},
+						"description": "Endpoint que permite cerrar la sesión dentro de la API. Borra la cookie que el inicio de sesión guarda."
+					},
+					"response": []
+				}
+			],
+			"description": "Esta carpeta guarda relación con los endpoints referentes al inicio de sesión. Es necesario iniciar sesión para poder utilizar estos endpoints. Al crear un nuevo usuario, este se genera con el permiso mínimo por defecto, por lo que, a fin de calificar este trabajo, se recomienda usar el superUsuario definido en el informe que acompaña esta colección."
+		},
+		{
+			"name": "Roles",
+			"item": [
+				{
+					"name": "Crear Rol",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"rol_nombre\": \"Probando\",\r\n    \"rol_permisos\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8800/bauApi/roles/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8800",
+							"path": [
+								"bauApi",
+								"roles",
+								""
+							]
+						},
+						"description": "Endpoint que permite crear un rol. Se necesita de un super Usuario para crear uno."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Roles",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8800/bauApi/roles/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8800",
+							"path": [
+								"bauApi",
+								"roles",
+								""
+							]
+						},
+						"description": "Endpoint que devuelve todos los Roles. Se necesita del permiso mínimo para utilizarlo."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Rol",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8800/bauApi/roles/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8800",
+							"path": [
+								"bauApi",
+								"roles",
+								"1"
+							]
+						},
+						"description": "Endpoint que devuelve un único rol, buscándolo por su Id que viene como parámetro del URL. Se necesita del permiso mínimo para utilizarlo."
+					},
+					"response": []
+				},
+				{
+					"name": "Modify Rol",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"rol_nombre\": \"Nombre modificado\",\r\n    \"rol_permisos\": 3\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8800/bauApi/roles/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8800",
+							"path": [
+								"bauApi",
+								"roles",
+								"3"
+							]
+						},
+						"description": "Endpoint que modifica un rol. Es necesario enviar el Id del rol como parámetro del URL. Se necesita del permiso de un Super Usuario para utilizarlo."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Rol",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8800/bauApi/roles/4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8800",
+							"path": [
+								"bauApi",
+								"roles",
+								"4"
+							]
+						},
+						"description": "Endpoint que elimina un rol. Es necesario enviar el Id del rol como parámetro del URL. Se necesita del permiso de un Super Usuario para utilizarlo."
+					},
+					"response": []
+				}
+			],
+			"description": "Esta carpeta hace referencia a todo el CRUD de los roles. Estos son accesibles únicamente si se ha iniciado sesión."
+		},
+		{
+			"name": "Bautizado",
+			"item": [
+				{
+					"name": "Create Bautizado",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"bau_nombre\": \"Juan Pérez3\",\r\n  \"bau_padre\": \"Carlos Pérez\",\r\n  \"bau_madre\": \"María Gómez\",\r\n  \"bau_padrino1\": \"Luis Fernández\",\r\n  \"bau_padrino2\": \"Ana Martínez\",\r\n  \"bau_fecha\": \"2024-08-25\",\r\n  \"bau_tomo\": 1,\r\n  \"bau_pagina\": 15,\r\n  \"bau_numero\": 1001,\r\n  \"min_id\": 1,\r\n  \"usu_id\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8800/bauApi/bautizados/createBautizado/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8800",
+							"path": [
+								"bauApi",
+								"bautizados",
+								"createBautizado",
+								""
+							]
+						},
+						"description": "Endpoint que permite ingresar un bautizado. Se necesita de un usuario con el permiso para crear bautizados."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Bautizados",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8800/bauApi/bautizados/getBautizados/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8800",
+							"path": [
+								"bauApi",
+								"bautizados",
+								"getBautizados",
+								""
+							]
+						},
+						"description": "Endpoint que regresa todos los bautizados. Se necesita el permiso mínimo para utilizarlo."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Bautizado",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8800/bauApi/bautizados/getBautizadoById/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8800",
+							"path": [
+								"bauApi",
+								"bautizados",
+								"getBautizadoById",
+								"2"
+							]
+						},
+						"description": "Endpoint que regresa un bautizado, buscándolo con el Id que viene como parámetro en el URL. Se necesita del permiso mínimo para utilizarlo."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Bautizado",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"bau_nombre\": \"Juan Pérez2\",\r\n  \"bau_padre\": \"Carlos Pérez2\",\r\n  \"bau_madre\": \"María Gómez2\",\r\n  \"bau_padrino1\": \"Luis Fernández2\",\r\n  \"bau_padrino2\": \"Ana Martínez2\",\r\n  \"bau_fecha\": \"2024-08-26\",\r\n  \"bau_tomo\": 1,\r\n  \"bau_pagina\": 15,\r\n  \"bau_numero\": 1002,\r\n  \"min_id\": 1,\r\n  \"usu_id\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8800/bauApi/bautizados/updateBautizado/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8800",
+							"path": [
+								"bauApi",
+								"bautizados",
+								"updateBautizado",
+								"2"
+							]
+						},
+						"description": "Endpoint que permite modificar un bautizado. Se necesita de un usuario con el permiso para modificar bautizados."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Bautizado",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8800/bauApi/bautizados/deleteBautizado/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8800",
+							"path": [
+								"bauApi",
+								"bautizados",
+								"deleteBautizado",
+								"3"
+							]
+						},
+						"description": "Endpoint que permite eliminar un bautizado. Se necesita de un usuario con el permiso para crear usuarios."
+					},
+					"response": []
+				},
+				{
+					"name": "Generate Certificate",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8800/bauApi/bautizados/generateCertificate/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8800",
+							"path": [
+								"bauApi",
+								"bautizados",
+								"generateCertificate",
+								"2"
+							]
+						},
+						"description": "Genera un certificado de bautizo para un bautizado en concreto. Es necesario el permiso mínimo para utilizarlo"
+					},
+					"response": []
+				}
+			],
+			"description": "Esta carpeta hace referencia a todo el CRUD de los bautizados dentro del sistema. Estos endpoints son accesibles únicamente si se ha iniciado sesión."
+		},
+		{
+			"name": "Minsitro",
+			"item": [
+				{
+					"name": "Create Ministro",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"min_nombre\": \"Ministro Postman\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8800/bauApi/ministros/createMinistro",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8800",
+							"path": [
+								"bauApi",
+								"ministros",
+								"createMinistro"
+							]
+						},
+						"description": "Endpoint que permite crear ministros. Se necesita del permiso más alto para poder utilizarlo."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Ministros",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8800/bauApi/ministros/getMinistros",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8800",
+							"path": [
+								"bauApi",
+								"ministros",
+								"getMinistros"
+							]
+						},
+						"description": "Endpoint que devuelve todos los ministros. Se neccesita del permiso mínimo para poder utilizarlo."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Ministro",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8800/bauApi/ministros/getMinistro/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8800",
+							"path": [
+								"bauApi",
+								"ministros",
+								"getMinistro",
+								"2"
+							]
+						},
+						"description": "Endpoint que devuelve un ministro, utilizando su Id para buscarlo, mismo que viene como parámetro del URL. Se neccesita del permiso mínimo para poder utilizarlo."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Ministro",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"min_nombre\": \"Ministro Postman Modificado\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8800/bauApi/ministros/updateMinistro/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8800",
+							"path": [
+								"bauApi",
+								"ministros",
+								"updateMinistro",
+								"2"
+							]
+						},
+						"description": "Endpoint que permite modificar ministros. Se necesita del permiso más alto para utilizarlo."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Ministro",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8800/bauApi/ministros/deleteMinistro/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8800",
+							"path": [
+								"bauApi",
+								"ministros",
+								"deleteMinistro",
+								"3"
+							]
+						},
+						"description": "Endpoint que permite eliminar ministros. Se necesita del permiso más alto para utilizarlo."
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints que hacen referencia al CRUD de ministros. Se necesita estar loggeado para utilizarlos."
+		}
+	]
+}

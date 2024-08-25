@@ -13,7 +13,7 @@ export const createRol = (req, res) => {
                 console.error("Error al crear el rol:", err);
                 return res.status(500).json({ error: "Error al crear el rol" });
             }
-            res.status(201).json({ id: result.insertId, nombre });
+            res.status(201).json({ id: result.insertId, rol_nombre });
         });
     } catch (error) {
         console.error("Error de validación:", error);
