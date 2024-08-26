@@ -1,4 +1,3 @@
-import { registerSchema, loginSchema } from "../schemas/auth.schema.js";
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { TOKEN_SECRET } from "../config.js";
@@ -8,16 +7,28 @@ export const register = (req, res) => {
     const { usu_username, usu_nombre, usu_establecimiento, usu_password } = req.body;
     const hashedPassword = bcrypt.hashSync(usu_password, 10);
 
-    const query = "INSERT INTO usuario (usu_usuario, usu_nombre, usu_establecimiento, usu_password, rol_id) VALUES (?, ?, ?, ?, ?)";
-    const values = [usu_username, usu_nombre, usu_establecimiento, hashedPassword, 2];
-
-    db.query(query, values, (err, result) => {
+    const checkUserQuery = "SELECT * FROM usuario WHERE usu_usuario = ?";
+    db.query(checkUserQuery, [usu_username], (err, results) => {
         if (err) {
-            console.error("Error al registrar el usuario:", err);
-            return res.status(500).json({ error: "Error al registrar el usuario" });
+            console.error("Error al verificar el usuario:", err);
+            return res.status(500).json({ error: "Error al verificar el usuario" });
         }
-        console.log("Usuario registrado con éxito");
-        res.status(201).json({ message: "Usuario registrado con éxito" });
+
+        if (results.length > 0) {
+            return res.status(400).json({ error: "El nombre de usuario ya está en uso" });
+        }
+
+        const insertUserQuery = "INSERT INTO usuario (usu_usuario, usu_nombre, usu_establecimiento, usu_password, rol_id) VALUES (?, ?, ?, ?, ?)";
+        const values = [usu_username, usu_nombre, usu_establecimiento, hashedPassword, 2];
+
+        db.query(insertUserQuery, values, (err, result) => {
+            if (err) {
+                console.error("Error al registrar el usuario:", err);
+                return res.status(500).json({ error: "Error al registrar el usuario" });
+            }
+            console.log("Usuario registrado con éxito");
+            res.status(201).json({ message: "Usuario registrado con éxito" });
+        });
     });
 };
 
