@@ -15,10 +15,16 @@ describe("Pruebas de integración para operaciones CRUD de roles", () => {
       });
     });
 
+    const response = await request(app).post("/bauApi/auth/register").send({
+      usu_username: "testuser",
+      usu_nombre: "Test User",
+      usu_establecimiento: "Test Establishment",
+      usu_password: "testpassword123",
+    });
     // Iniciar sesión para obtener el token de autenticación
     const loginResponse = await request(app)
       .post("/bauApi/auth/login")
-      .send({ usu_username: "codaki", usu_password: "12345" });
+      .send({ usu_username: "testuser", usu_password: "testpassword123" });
 
     authToken = loginResponse.headers["set-cookie"][0]
       .split(";")[0]
@@ -45,10 +51,7 @@ describe("Pruebas de integración para operaciones CRUD de roles", () => {
       });
 
     expect(response.statusCode).toBe(201);
-    console.log("aaaaaaaaaaaaa");
     createdRoleId = response.body.id;
-    console.log(createdRoleId);
-    console.log(response);
   });
 
   test("Debería obtener todos los roles", async () => {
@@ -68,6 +71,8 @@ describe("Pruebas de integración para operaciones CRUD de roles", () => {
 
     expect(response.statusCode).toBe(200);
     expect(response.body).toHaveProperty("rol_id", createdRoleId);
+    console.log("aaaaaaaaaaaaaaaa");
+    console.log(createdRoleId);
     expect(response.body).toHaveProperty("rol_nombre", "Rol de prueba");
     expect(response.body).toHaveProperty("rol_permisos", 1);
   });

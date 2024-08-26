@@ -44,8 +44,8 @@ describe("Pruebas de integración para autenticación", () => {
 
   test("Debería iniciar sesión con un usuario válido", async () => {
     const response = await request(app).post("/bauApi/auth/login").send({
-      usu_username: "codaki",
-      usu_password: "12345",
+      usu_username: "testuser",
+      usu_password: "testpassword123",
     });
 
     expect(response.statusCode).toBe(200);

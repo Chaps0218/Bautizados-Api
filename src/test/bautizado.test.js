@@ -15,10 +15,16 @@ describe("Pruebas de integración para operaciones de bautizados", () => {
       });
     });
 
+    const response = await request(app).post("/bauApi/auth/register").send({
+      usu_username: "testuser",
+      usu_nombre: "Test User",
+      usu_establecimiento: "Test Establishment",
+      usu_password: "testpassword123",
+    });
     // Iniciar sesión para obtener el token de autenticación
     const loginResponse = await request(app)
       .post("/bauApi/auth/login")
-      .send({ usu_username: "codaki", usu_password: "12345" });
+      .send({ usu_username: "testuser", usu_password: "testpassword123" });
 
     authToken = loginResponse.headers["set-cookie"][0]
       .split(";")[0]

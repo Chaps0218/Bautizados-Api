@@ -10,9 +10,6 @@ import bautizadoRoutes from "./routes/bautizado.routes.js";
 import ministroRoutes from "./routes/ministro.routes.js";
 import rolRoutes from "./routes/rol.routes.js";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
 const app = express();
 const corsOptions = {
   origin: "http://localhost:3000",
@@ -38,9 +35,6 @@ app.use(
     },
   })
 );
-
-const publicPath = path.join(__dirname, "public");
-app.use(express.static(publicPath));
 
 // Añadir cabeceras Cache-Control
 app.use((req, res, next) => {

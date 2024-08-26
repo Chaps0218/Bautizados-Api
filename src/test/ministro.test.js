@@ -30,9 +30,16 @@ describe("Pruebas de integración para el controlador de ministros", () => {
   let token;
 
   beforeAll(async () => {
+    const response = await request(app).post("/bauApi/auth/register").send({
+      usu_username: "testuser",
+      usu_nombre: "Test User",
+      usu_establecimiento: "Test Establishment",
+      usu_password: "testpassword123",
+    });
+
     const res = await request(app)
       .post("/bauApi/auth/login")
-      .send({ usu_username: "codaki", usu_password: "12345" });
+      .send({ usu_username: "testuser", usu_password: "testpassword123" });
     const headers = res.headers; // Get the headers from the response
     const cookie = headers["set-cookie"][0]; // Get the first cookie string
     token = cookie.split(";")[0].split("=")[1]; // Split by ';' and then by '=' to get the token value
