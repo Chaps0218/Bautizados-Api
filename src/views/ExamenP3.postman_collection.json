@@ -13,12 +13,39 @@
 			"item": [
 				{
 					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response must have the required Content-Type header\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response message field is present\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.message).to.exist;",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"usu_username\": \"usuarioPrueba\",\r\n    \"usu_password\": \"123456\"\r\n}",
+							"raw": "{\r\n    \"usu_username\": \"usuAdmin\",\r\n    \"usu_password\": \"12345\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -44,12 +71,52 @@
 				},
 				{
 					"name": "Registrar",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 201\", function () {",
+									"    pm.expect(pm.response.code).to.equal(201);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required Content-Type header\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Message field is present in the response\", function () {",
+									"  const responseData = pm.response.json();",
+									"  pm.expect(responseData).to.have.property('message');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Message field is a non-empty string\", function () {",
+									"  const responseData = pm.response.json();",
+									"",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData.message).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Message should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Description of the request is not empty\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData.message).to.exist.and.to.not.be.empty;",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"usuarioPrueba\",\r\n    \"nombre\": \"nombre prueba\",\r\n    \"establecimiento\": \"establecimiento prueba\",\r\n    \"password\": \"123456\"\r\n}",
+							"raw": "{\r\n    \"usu_username\": \"usuarioPrueba24\",\r\n    \"usu_nombre\": \"nombre prueba\",\r\n    \"usu_establecimiento\": \"establecimiento prueba\",\r\n    \"usu_password\": \"123456\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -72,28 +139,6 @@
 						"description": "Endpoint que se agregó para fines didácticos, esta función normalmente estaría disponible únicamente para superUsuarios, al no ser un sistema abierto."
 					},
 					"response": []
-				},
-				{
-					"name": "Logout",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8800/bauApi/auth/logout",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8800",
-							"path": [
-								"bauApi",
-								"auth",
-								"logout"
-							]
-						},
-						"description": "Endpoint que permite cerrar la sesión dentro de la API. Borra la cookie que el inicio de sesión guarda."
-					},
-					"response": []
 				}
 			],
 			"description": "Esta carpeta guarda relación con los endpoints referentes al inicio de sesión. Es necesario iniciar sesión para poder utilizar estos endpoints. Al crear un nuevo usuario, este se genera con el permiso mínimo por defecto, por lo que, a fin de calificar este trabajo, se recomienda usar el superUsuario definido en el informe que acompaña esta colección."
@@ -103,6 +148,41 @@
 			"item": [
 				{
 					"name": "Crear Rol",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields - id and rol_nombre\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData).to.have.property('id');",
+									"    pm.expect(responseData).to.have.property('rol_nombre');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Rol_nombre is a non-empty string\", function () {",
+									"  const responseData = pm.response.json();",
+									"",
+									"  pm.expect(responseData.rol_nombre).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Rol_nombre should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Verify Content-Type header is application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -134,6 +214,61 @@
 				},
 				{
 					"name": "Get Roles",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"  pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields - rol_id, rol_nombre, and rol_permisos\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('array');",
+									"    responseData.forEach(function(role) {",
+									"        pm.expect(role).to.have.property('rol_id');",
+									"        pm.expect(role).to.have.property('rol_nombre');",
+									"        pm.expect(role).to.have.property('rol_permisos');",
+									"    });",
+									"});",
+									"",
+									"",
+									"pm.test(\"Rol_id is a non-negative integer\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('array').that.is.not.empty;",
+									"  responseData.forEach(function(role) {",
+									"    pm.expect(role.rol_id).to.be.a('number').that.is.not.below(0, \"Rol_id should be a non-negative integer\");",
+									"  });",
+									"});",
+									"",
+									"",
+									"pm.test(\"Rol nombre is a non-empty string\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('array');",
+									"  responseData.forEach(function(role) {",
+									"    pm.expect(role.rol_nombre).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Rol nombre should not be empty\");",
+									"  });",
+									"});",
+									"",
+									"",
+									"pm.test(\"Rol_permisos is a non-negative integer\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('array');",
+									"    responseData.forEach(function(role) {",
+									"        pm.expect(role.rol_permisos).to.be.a('number').and.to.be.at.least(0);",
+									"    });",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -156,6 +291,54 @@
 				},
 				{
 					"name": "Get Rol",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData).to.have.property('rol_id');",
+									"  pm.expect(responseData).to.have.property('rol_nombre');",
+									"  pm.expect(responseData).to.have.property('rol_permisos');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Rol_id is a non-negative integer\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData.rol_id).to.be.a('number').and.to.satisfy((val) => val >= 0, \"Rol_id should be a non-negative integer\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Rol_nombre is a non-empty string\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData.rol_nombre).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Rol_permisos is a non-negative integer\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.rol_permisos).to.be.a('number');",
+									"    pm.expect(responseData.rol_permisos).to.be.at.least(0);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -178,6 +361,39 @@
 				},
 				{
 					"name": "Modify Rol",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response Content-Type is application/json\", function () {",
+									"  pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Message field is present in the response\", function () {",
+									"  const responseData = pm.response.json();",
+									"  pm.expect(responseData.message).to.exist;",
+									"});",
+									"",
+									"",
+									"pm.test(\"Message field is a non-empty string\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.message).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Message should not be empty\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "PUT",
 						"header": [],
@@ -209,11 +425,45 @@
 				},
 				{
 					"name": "Delete Rol",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Content type is application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Message is a non-empty string\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData.message).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Message should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Description is present in the response\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData.message).to.exist.and.to.be.a('string');",
+									"  pm.expect(responseData.message).to.not.be.empty;",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8800/bauApi/roles/4",
+							"raw": "http://localhost:8800/bauApi/roles/11",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -222,7 +472,7 @@
 							"path": [
 								"bauApi",
 								"roles",
-								"4"
+								"11"
 							]
 						},
 						"description": "Endpoint que elimina un rol. Es necesario enviar el Id del rol como parámetro del URL. Se necesita del permiso de un Super Usuario para utilizarlo."
@@ -237,6 +487,48 @@
 			"item": [
 				{
 					"name": "Create Bautizado",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields - message, id, and bau_nombre\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.message).to.exist;",
+									"    pm.expect(responseData.id).to.exist;",
+									"    pm.expect(responseData.bau_nombre).to.exist;",
+									"});",
+									"",
+									"",
+									"pm.test(\"Id is a non-negative integer\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData.id).to.be.a('number').and.to.be.at.least(0);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Content-Type is application/json\", function () {",
+									"  pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Message is a non-empty string\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData.message).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Message should not be empty\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -269,6 +561,62 @@
 				},
 				{
 					"name": "Get Bautizados",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('array').that.is.not.empty;",
+									"    ",
+									"    responseData.forEach(function(bautizado) {",
+									"        pm.expect(bautizado).to.have.property('bau_id');",
+									"        pm.expect(bautizado).to.have.property('bau_nombre');",
+									"        pm.expect(bautizado).to.have.property('bau_padre');",
+									"        pm.expect(bautizado).to.have.property('bau_madre');",
+									"        pm.expect(bautizado).to.have.property('bau_padrino1');",
+									"        pm.expect(bautizado).to.have.property('bau_padrino2');",
+									"        pm.expect(bautizado).to.have.property('bau_fecha');",
+									"        pm.expect(bautizado).to.have.property('bau_tomo');",
+									"        pm.expect(bautizado).to.have.property('bau_pagina');",
+									"        pm.expect(bautizado).to.have.property('bau_numero');",
+									"        pm.expect(bautizado).to.have.property('min_id');",
+									"        pm.expect(bautizado).to.have.property('usu_id');",
+									"    });",
+									"});",
+									"",
+									"pm.test(\"Response is an array with at least one element\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('array').and.to.have.lengthOf.at.least(1);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Bau id is a non-negative integer\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    responseData.forEach(function(bautizado) {",
+									"        pm.expect(bautizado.bau_id).to.be.a('number').and.to.satisfy((bau_id) => bau_id >= 0, \"Bau id should be non-negative\");",
+									"        pm.expect(bautizado.bau_tomo).to.be.a('number').and.to.satisfy((bau_tomo) => bau_tomo >= 0, \"Bau tomo should be non-negative\");",
+									"        pm.expect(bautizado.bau_pagina).to.be.a('number').and.to.satisfy((bau_pagina) => bau_pagina >= 0, \"Bau pagina should be non-negative\");",
+									"        pm.expect(bautizado.bau_numero).to.be.a('number').and.to.satisfy((bau_numero) => bau_numero >= 0, \"Bau numero should be non-negative\");",
+									"        pm.expect(bautizado.min_id).to.be.a('number').and.to.satisfy((min_id) => min_id >= 0, \"Min id should be non-negative\");",
+									"        pm.expect(bautizado.usu_id).to.be.a('number').and.to.satisfy((usu_id) => usu_id >= 0, \"Usu id should be non-negative\");",
+									"    });",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -292,6 +640,53 @@
 				},
 				{
 					"name": "Get Bautizado",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData).to.have.property('bau_id');",
+									"    pm.expect(responseData).to.have.property('bau_nombre');",
+									"    pm.expect(responseData).to.have.property('bau_padre');",
+									"    pm.expect(responseData).to.have.property('bau_madre');",
+									"    pm.expect(responseData).to.have.property('bau_padrino1');",
+									"    pm.expect(responseData).to.have.property('bau_padrino2');",
+									"    pm.expect(responseData).to.have.property('bau_fecha');",
+									"    pm.expect(responseData).to.have.property('bau_tomo');",
+									"    pm.expect(responseData).to.have.property('bau_pagina');",
+									"    pm.expect(responseData).to.have.property('bau_numero');",
+									"    pm.expect(responseData).to.have.property('min_id');",
+									"    pm.expect(responseData).to.have.property('usu_id');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Min_id and usu_id are non-negative integers\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData.min_id).to.be.a('number').and.to.be.at.least(0);",
+									"  pm.expect(responseData.usu_id).to.be.a('number').and.to.be.at.least(0);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Content type is application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -315,6 +710,40 @@
 				},
 				{
 					"name": "Update Bautizado",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Content-Type header is application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Message field is present in the response\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData.message).to.exist;",
+									"});",
+									"",
+									"",
+									"pm.test(\"Message field is a non-empty string\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData.message).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Message should not be empty\");",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "PUT",
 						"header": [],
@@ -347,11 +776,52 @@
 				},
 				{
 					"name": "Delete Bautizado",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Content type is application/json\", function () {",
+									"  pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Message field is present in the response\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData.message).to.exist;",
+									"});",
+									"",
+									"",
+									"pm.test(\"Message is a non-empty string\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData.message).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Message should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Ensure user has required permission to delete baptized person\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.message).to.exist.and.to.be.a('string');",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8800/bauApi/bautizados/deleteBautizado/3",
+							"raw": "http://localhost:8800/bauApi/bautizados/deleteBautizado/10",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -361,7 +831,7 @@
 								"bauApi",
 								"bautizados",
 								"deleteBautizado",
-								"3"
+								"10"
 							]
 						},
 						"description": "Endpoint que permite eliminar un bautizado. Se necesita de un usuario con el permiso para crear usuarios."
@@ -399,6 +869,48 @@
 			"item": [
 				{
 					"name": "Create Ministro",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 201\", function () {",
+									"  pm.expect(pm.response.code).to.equal(201);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields - id and min_nombre\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData.id).to.exist;",
+									"  pm.expect(responseData.min_nombre).to.exist;",
+									"});",
+									"",
+									"",
+									"pm.test(\"Id is a non-negative integer\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData.id).to.be.a('number');",
+									"    pm.expect(responseData.id).to.be.at.least(0);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Min_nombre is a non-empty string\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData.min_nombre).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Min_nombre should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Verify that the Content-Type is application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -430,6 +942,56 @@
 				},
 				{
 					"name": "Get Ministros",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields - min_id and min_nombre\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('array');",
+									"    ",
+									"    responseData.forEach(function(ministro) {",
+									"        pm.expect(ministro).to.have.property('min_id');",
+									"        pm.expect(ministro).to.have.property('min_nombre');",
+									"    });",
+									"});",
+									"",
+									"",
+									"pm.test(\"Min_id is a non-negative integer\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('array');",
+									"    responseData.forEach(function(ministro) {",
+									"        pm.expect(ministro.min_id).to.be.a('number').and.to.satisfy((min_id) => min_id >= 0, \"Min_id should be a non-negative integer\");",
+									"    });",
+									"});",
+									"",
+									"",
+									"pm.test(\"Min_nombre is a non-empty string\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('array');",
+									"  responseData.forEach(function(ministro) {",
+									"    pm.expect(ministro.min_nombre).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Min_nombre should not be empty\");",
+									"  });",
+									"});",
+									"",
+									"",
+									"pm.test(\"Content type is application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -452,6 +1014,50 @@
 				},
 				{
 					"name": "Get Ministro",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields - min_id and min_nombre\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.min_id).to.exist;",
+									"    pm.expect(responseData.min_nombre).to.exist;",
+									"});",
+									"",
+									"",
+									"pm.test(\"Min_id is a non-negative integer\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.min_id).to.be.a('number');",
+									"    pm.expect(responseData.min_id).to.be.at.least(0);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Min_nombre is a non-empty string\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData.min_nombre).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Min_nombre should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Content-Type header is application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -475,6 +1081,39 @@
 				},
 				{
 					"name": "Update Ministro",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Content-Type header is set to application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Message in the response is non-empty\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData.message).to.exist.and.to.not.be.empty;",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response message is descriptive and user-friendly\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData.message).to.be.a('string').and.to.not.be.empty;",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "PUT",
 						"header": [],
@@ -507,11 +1146,43 @@
 				},
 				{
 					"name": "Delete Ministro",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"  });",
+									"",
+									"",
+									"pm.test(\"Response has the required Content-Type header with value application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Message field is present in the response\", function () {",
+									"  const responseData = pm.response.json();",
+									"  pm.expect(responseData).to.have.property('message');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Message is a non-empty string\", function () {",
+									"  const responseData = pm.response.json();",
+									"",
+									"  pm.expect(responseData.message).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Message should not be empty\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8800/bauApi/ministros/deleteMinistro/3",
+							"raw": "http://localhost:8800/bauApi/ministros/deleteMinistro/23",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -521,7 +1192,7 @@
 								"bauApi",
 								"ministros",
 								"deleteMinistro",
-								"3"
+								"23"
 							]
 						},
 						"description": "Endpoint que permite eliminar ministros. Se necesita del permiso más alto para utilizarlo."
@@ -530,6 +1201,51 @@
 				}
 			],
 			"description": "Endpoints que hacen referencia al CRUD de ministros. Se necesita estar loggeado para utilizarlos."
+		},
+		{
+			"name": "Logout",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response has a valid Content-Type header\", function () {",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+							"});",
+							"",
+							"pm.test(\"Verify that the session cookie has been deleted after logout\", function () {",
+							"    pm.expect(pm.response.cookies.has('session')).to.be.false;",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8800/bauApi/auth/logout",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8800",
+					"path": [
+						"bauApi",
+						"auth",
+						"logout"
+					]
+				},
+				"description": "Endpoint que permite cerrar la sesión dentro de la API. Borra la cookie que el inicio de sesión guarda."
+			},
+			"response": []
 		}
 	]
 }
