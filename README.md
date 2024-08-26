@@ -17,9 +17,23 @@ Para asegurar la integridad de esta API, se validaron los Endpoints para asegura
     ```bash
     npm start
     ```
-
-3. **(Opcional) Utilizar la colección de Postman:**
+    
+    
+## Uso de Postman
+**Utilizar la colección de Postman:**
 De ser necesario, se puede utilizar la colección de Postman almacenado en la ruta 
     ```bash
     ./src/views
+    ```
+Este archivo contiene una documentación más precisa de todos los endpoints. 
+
+## Pruebas Unitarias
+Dentro de Postman, se realizaron pruebas unitarias para cada endpoint para comprobar su funcionamiento.
+Estas pruebas pueden ser ejecutas al ejecutar la colección. Solo notar que es necesario tener ciertos elementos dentro de la base de datos para poder ejecutar las de eliminar, principalmente.
+
+## Pruebas de Integración
+Para realizar las pruebas de integración, se utilizó Jest, como fue enseñado en clase, para probar todas las partes de la API en conjunto.
+Para ejecutar estas pruebas es necesario utilizar el comando:
+    ```bash
+    npm test
     ```
