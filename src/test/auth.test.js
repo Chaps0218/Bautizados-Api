@@ -29,7 +29,7 @@ describe("Pruebas de integración para autenticación", () => {
 
   test("Debería registrar un nuevo usuario", async () => {
     const response = await request(app).post("/bauApi/auth/register").send({
-      usu_username: "testuser",
+      usu_username: "testuser1",
       usu_nombre: "Test User",
       usu_establecimiento: "Test Establishment",
       usu_password: "testpassword123",

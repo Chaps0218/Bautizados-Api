@@ -3,8 +3,7 @@ import cors from "cors";
 import express from "express";
 import helmet from "helmet";
 import morgan from "morgan";
-import path from "path";
-import { fileURLToPath } from "url";
+
 import authRoutes from "./routes/auth.routes.js";
 import bautizadoRoutes from "./routes/bautizado.routes.js";
 import ministroRoutes from "./routes/ministro.routes.js";
@@ -24,7 +23,7 @@ app.use(helmet());
 app.use(
   helmet.contentSecurityPolicy({
     directives: {
-      defaultSrc: ["'self'"],
+      defaultSrc: ["'none'"],
       scriptSrc: ["'self'", "https://trustedscripts.example.com"],
       styleSrc: ["'self'", "https://trustedstyles.example.com"],
       imgSrc: ["'self'", "data:", "https://trustedimages.example.com"],
@@ -32,7 +31,11 @@ app.use(
       fontSrc: ["'self'", "https://trustedfonts.example.com"],
       objectSrc: ["'none'"],
       upgradeInsecureRequests: [],
+      baseUri: ["'self'"],
+      frameAncestors: ["'none'"],
+      formAction: ["'self'"],
     },
+    reportOnly: false,
   })
 );
 
