@@ -37,3 +37,4 @@ Para ejecutar estas pruebas es necesario utilizar el comando:
     ```bash
     npm test
     ```
+Esto funciona debido a que estamos utilizando jest para el ambiente de desarrollo.
